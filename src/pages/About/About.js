@@ -139,22 +139,28 @@ const About = () => {
           <SectionTitle>Meet Taylor</SectionTitle>
           <BioText>
             <p>
-              Born and raised under the wide-open skies of Montana, I've always
-              felt most at home where the prairies meet the mountains. My
-              journey into music began when my grandfather gifted me his
-              cherished vintage guitar on my tenth birthday.
+              Hailing from San Diego by way of Ohio, Taylor Johns is a
+              powerhouse vocalist, dynamic performer, and heartfelt songwriter
+              blending country, rock, and pop influences into a sound that’s
+              both timeless and fresh. With a voice that commands attention and
+              a presence that captivates, Taylor delivers high-energy
+              performances and intimate acoustic sets alike.
             </p>
             <p>
-              That old six-string became my constant companion, and I quickly
-              found myself writing songs that told stories of the American
-              West—not just as it was, but as it continues to be: wild, hopeful,
-              and ever-changing.
+              A former lead singer of the Navy Rock Band, Taylor has spent years
+              performing across the country, honing a sound that reflects both
+              resilience and passion. Whether playing a stripped-down solo show
+              with just a guitar or bringing an audience to their feet with a
+              full-band performance, Taylor brings authenticity, energy, and
+              storytelling to every song.
             </p>
             <p>
-              My sound blends traditional country roots with modern indie
-              sensibilities, creating something that feels both nostalgic and
-              fresh. I draw inspiration from the natural world, everyday human
-              connections, and the unique characters I've met along my journey.
+              With five singles released in the past year and a 12-track album
+              in the works for 2026, Taylor is an artist on the rise, aiming to
+              carve a lasting name in country music alongside inspirations like
+              Carrie Underwood, Chris Stapleton, and Gretchen Wilson. Fans can
+              expect a mix of crowd-favorite covers and powerful originals that
+              leave a lasting impact.
             </p>
           </BioText>
         </BioContent>
@@ -176,11 +182,7 @@ const About = () => {
             <Placeholder type="behind" height="200px" alt="Early days" />
             <CardContent>
               <CardTitle>Early Beginnings</CardTitle>
-              <p>
-                From open mic nights at the local diner to performing at state
-                fairs, my early years were all about finding my voice and
-                connecting with audiences one song at a time.
-              </p>
+              <p></p>
             </CardContent>
           </StoryCard>
 
@@ -192,11 +194,7 @@ const About = () => {
             />
             <CardContent>
               <CardTitle>Crafting Stories</CardTitle>
-              <p>
-                Songwriting has always been my primary form of expression. I
-                believe the best songs are the ones that make you feel like
-                you've lived them yourself—even if the story isn't yours.
-              </p>
+              <p></p>
             </CardContent>
           </StoryCard>
 
@@ -204,11 +202,7 @@ const About = () => {
             <Placeholder type="behind" height="200px" alt="On the road" />
             <CardContent>
               <CardTitle>Life on the Road</CardTitle>
-              <p>
-                Touring has taken me across the country, from intimate venues to
-                festival stages. Each place adds a new layer to my music and
-                introduces me to incredible fellow artists and fans.
-              </p>
+              <p></p>
             </CardContent>
           </StoryCard>
         </StoriesGrid>
@@ -227,23 +221,12 @@ const About = () => {
           <SectionTitle>Influences & Inspiration</SectionTitle>
           <BioText>
             <p>
-              My musical influences range from classic country legends like
-              Dolly Parton and Johnny Cash to contemporary artists like Kacey
-              Musgraves and Jason Isbell. I'm also deeply inspired by folk
-              storytellers and indie artists who bring authenticity to their
-              craft.
-            </p>
-            <p>
-              Beyond music, I find inspiration in literature—particularly
-              American writers who capture the spirit of place and the
-              complexities of human relationships. Authors like Willa Cather,
-              Annie Proulx, and Cormac McCarthy have shaped how I approach
-              storytelling in my songs.
-            </p>
-            <p>
-              When I'm not making music, you'll find me hiking with my rescue
-              dog Blue, searching for vintage western wear in small-town thrift
-              shops, or experimenting with new recipes in my kitchen.
+              With five singles released in the past year and a 12-track album
+              in the works for 2026, Taylor is an artist on the rise, aiming to
+              carve a lasting name in country music alongside inspirations like
+              Carrie Underwood, Chris Stapleton, and Gretchen Wilson. Fans can
+              expect a mix of crowd-favorite covers and powerful originals that
+              leave a lasting impact.
             </p>
           </BioText>
         </BioContent>

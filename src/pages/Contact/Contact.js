@@ -308,20 +308,6 @@ const Contact = () => {
           </InfoSection>
 
           <InfoSection>
-            <InfoSectionTitle>Fan Mail</InfoSectionTitle>
-            <InfoText>
-              I love hearing from fans! Send letters and packages to:
-            </InfoText>
-            <InfoText>
-              Taylor Johns
-              <br />
-              P.O. Box 12345
-              <br />
-              Nashville, TN 37203
-            </InfoText>
-          </InfoSection>
-
-          <InfoSection>
             <InfoSectionTitle>Social Media</InfoSectionTitle>
             <InfoText>
               The fastest way to stay updated is through my social channels:

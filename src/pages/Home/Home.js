@@ -158,7 +158,7 @@ const Home = () => {
         <HeroContent>
           <HeroTitle>Taylor Johns</HeroTitle>
           <HeroSubtitle>
-            Western-inspired indie artist with a touch of playful charm
+            Country-rock artist with a touch of playful charm
           </HeroSubtitle>
           <HeroButton to="/music">Listen Now</HeroButton>
         </HeroContent>
