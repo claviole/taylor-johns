@@ -187,7 +187,7 @@ const Home = () => {
       doc(db, "website-content", "home"),
       (doc) => {
         if (doc.exists()) {
-          setPageContent({ ...pageContent, ...doc.data() });
+          setPageContent((prevContent) => ({ ...prevContent, ...doc.data() }));
         }
       }
     );
