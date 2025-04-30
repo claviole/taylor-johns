@@ -14,7 +14,6 @@ import About from "./pages/About/About";
 import Contact from "./pages/Contact/Contact";
 import Feed from "./pages/Feed/Feed";
 import Music from "./pages/Music/Music";
-import Admin from "./pages/Admin/Admin";
 
 function App() {
   return (
@@ -28,7 +27,6 @@ function App() {
           <Route path="/contact" element={<Contact />} />
           <Route path="/feed" element={<Feed />} />
           <Route path="/music" element={<Music />} />
-          <Route path="/admin" element={<Admin />} />
         </Routes>
         <Footer />
       </Router>
