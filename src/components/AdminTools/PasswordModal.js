@@ -73,25 +73,58 @@ const CancelButton = styled(Button)`
   }
 `;
 
-const PasswordModal = ({ password, setPassword, error, onSubmit, onClose }) => {
+const InputGroup = styled.div`
+  margin-bottom: 1rem;
+`;
+
+const Label = styled.label`
+  display: block;
+  margin-bottom: 0.5rem;
+`;
+
+const PasswordModal = ({
+  email,
+  setEmail,
+  password,
+  setPassword,
+  error,
+  onSubmit,
+  onClose,
+}) => {
   return (
     <ModalOverlay>
       <ModalContent>
-        <ModalTitle>Admin Authentication</ModalTitle>
+        <h2>Admin Access</h2>
+        <p>Enter your admin credentials to continue</p>
         <Form onSubmit={onSubmit}>
-          <Input
-            type="password"
-            placeholder="Enter admin password"
-            value={password}
-            onChange={(e) => setPassword(e.target.value)}
-            autoFocus
-          />
+          <InputGroup>
+            <Label htmlFor="email">Email</Label>
+            <Input
+              type="email"
+              id="email"
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
+              placeholder="admin@example.com"
+              required
+            />
+          </InputGroup>
+          <InputGroup>
+            <Label htmlFor="password">Password</Label>
+            <Input
+              type="password"
+              id="password"
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
+              placeholder="Enter your password"
+              required
+            />
+          </InputGroup>
           {error && <ErrorMessage>{error}</ErrorMessage>}
           <ButtonContainer>
-            <SubmitButton type="submit">Login</SubmitButton>
             <CancelButton type="button" onClick={onClose}>
               Cancel
             </CancelButton>
+            <SubmitButton type="submit">Login</SubmitButton>
           </ButtonContainer>
         </Form>
       </ModalContent>

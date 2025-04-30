@@ -1,10 +1,12 @@
 import { useState, useEffect } from "react";
-import { getFirestore, doc, getDoc } from "firebase/firestore";
-import { storage } from "../../firebase/config";
+import { signInWithEmailAndPassword } from "firebase/auth";
+import { auth } from "../../firebase/config";
+import PasswordModal from "./PasswordModal";
 
 const AdminKeyDetector = ({ children, onActivateAdmin }) => {
   const [keysPressed, setKeysPressed] = useState(new Set());
   const [showPasswordModal, setShowPasswordModal] = useState(false);
+  const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
 
@@ -48,26 +50,24 @@ const AdminKeyDetector = ({ children, onActivateAdmin }) => {
     e.preventDefault();
 
     try {
-      // Fetch password from Firebase
-      const db = getFirestore();
-      const passwordDoc = await getDoc(doc(db, "password", "admin-password"));
+      // Use Firebase Authentication instead of custom password checking
+      await signInWithEmailAndPassword(auth, email, password);
 
-      if (passwordDoc.exists() && passwordDoc.data().password === password) {
-        setShowPasswordModal(false);
-        setPassword("");
-        setError("");
-        onActivateAdmin(true);
-      } else {
-        setError("Incorrect password");
-      }
+      // If we get here, authentication was successful
+      setShowPasswordModal(false);
+      setEmail("");
+      setPassword("");
+      setError("");
+      onActivateAdmin(true);
     } catch (error) {
-      console.error("Error fetching password:", error);
-      setError("Error verifying password");
+      console.error("Error signing in:", error);
+      setError("Invalid email or password");
     }
   };
 
   const handleModalClose = () => {
     setShowPasswordModal(false);
+    setEmail("");
     setPassword("");
     setError("");
   };
@@ -78,6 +78,8 @@ const AdminKeyDetector = ({ children, onActivateAdmin }) => {
 
       {showPasswordModal && (
         <PasswordModal
+          email={email}
+          setEmail={setEmail}
           password={password}
           setPassword={setPassword}
           error={error}
@@ -86,35 +88,6 @@ const AdminKeyDetector = ({ children, onActivateAdmin }) => {
         />
       )}
     </>
-  );
-};
-
-const PasswordModal = ({ password, setPassword, error, onSubmit, onClose }) => {
-  return (
-    <div className="password-modal-overlay">
-      <div className="password-modal">
-        <h2>Admin Authentication</h2>
-        <form onSubmit={onSubmit}>
-          <div className="form-group">
-            <label htmlFor="password">Enter admin password:</label>
-            <input
-              type="password"
-              id="password"
-              value={password}
-              onChange={(e) => setPassword(e.target.value)}
-              autoFocus
-            />
-          </div>
-          {error && <div className="error-message">{error}</div>}
-          <div className="button-group">
-            <button type="button" onClick={onClose}>
-              Cancel
-            </button>
-            <button type="submit">Verify</button>
-          </div>
-        </form>
-      </div>
-    </div>
   );
 };
 
