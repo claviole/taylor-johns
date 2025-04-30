@@ -1,7 +1,24 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
 import styled from "styled-components";
 import { Link } from "react-router-dom";
 import Placeholder from "../../components/common/Placeholder";
+import AdminKeyDetector from "../../components/AdminTools/AdminKeyDetector";
+import EditableContent from "../../components/AdminTools/EditableContent";
+import {
+  EditToolbar,
+  PasswordModalOverlay,
+  PasswordModal,
+  EditModal,
+} from "../../components/AdminTools/AdminStyles";
+import {
+  getFirestore,
+  doc,
+  getDoc,
+  setDoc,
+  collection,
+  onSnapshot,
+} from "firebase/firestore";
+import { storage } from "../../firebase/config";
 
 const HomeContainer = styled.div`
   display: flex;
@@ -145,61 +162,289 @@ const CardTitle = styled.h3`
 `;
 
 const Home = () => {
+  const [isAdminMode, setIsAdminMode] = useState(false);
+  const [selectedElement, setSelectedElement] = useState(null);
+  const [showEditModal, setShowEditModal] = useState(false);
+  const [editContent, setEditContent] = useState("");
+  const [pageContent, setPageContent] = useState({
+    heroTitle: "Taylor Johns",
+    heroSubtitle: "Country-rock artist with a touch of playful charm",
+    latestTitle: "Latest Releases",
+    card1Title: "New Single",
+    card1Text: "Check out my latest release and let me know what you think!",
+    card2Title: "Upcoming Shows",
+    card2Text: "Don't miss my next live performance. See all upcoming dates.",
+    card3Title: "Behind The Scenes",
+    card3Text:
+      "Follow my journey and get exclusive content on my social feeds.",
+  });
+
+  const db = getFirestore();
+
+  useEffect(() => {
+    // Fetch custom content from Firebase if it exists
+    const unsubscribe = onSnapshot(
+      doc(db, "website-content", "home"),
+      (doc) => {
+        if (doc.exists()) {
+          setPageContent({ ...pageContent, ...doc.data() });
+        }
+      }
+    );
+
+    return () => unsubscribe();
+  }, []);
+
+  const handleActivateAdmin = (activate) => {
+    setIsAdminMode(activate);
+  };
+
+  const handleSelectForEditing = (element) => {
+    setSelectedElement(element);
+
+    // Set current content for editing
+    let currentContent = "";
+    switch (element.id) {
+      case "heroTitle":
+        currentContent = pageContent.heroTitle;
+        break;
+      case "heroSubtitle":
+        currentContent = pageContent.heroSubtitle;
+        break;
+      case "latestTitle":
+        currentContent = pageContent.latestTitle;
+        break;
+      case "card1Title":
+        currentContent = pageContent.card1Title;
+        break;
+      case "card1Text":
+        currentContent = pageContent.card1Text;
+        break;
+      case "card2Title":
+        currentContent = pageContent.card2Title;
+        break;
+      case "card2Text":
+        currentContent = pageContent.card2Text;
+        break;
+      case "card3Title":
+        currentContent = pageContent.card3Title;
+        break;
+      case "card3Text":
+        currentContent = pageContent.card3Text;
+        break;
+      default:
+        break;
+    }
+
+    setEditContent(currentContent);
+    setShowEditModal(true);
+  };
+
+  const handleSaveEdit = async () => {
+    // Update local state
+    const updatedContent = { ...pageContent };
+
+    if (selectedElement && selectedElement.id) {
+      updatedContent[selectedElement.id] = editContent;
+      setPageContent(updatedContent);
+    }
+
+    // Save to Firebase
+    try {
+      await setDoc(doc(db, "website-content", "home"), updatedContent, {
+        merge: true,
+      });
+      console.log("Content updated successfully");
+    } catch (error) {
+      console.error("Error updating content:", error);
+    }
+
+    setShowEditModal(false);
+    setSelectedElement(null);
+  };
+
+  const handleSaveAllChanges = async () => {
+    try {
+      await setDoc(doc(db, "website-content", "home"), pageContent);
+      setIsAdminMode(false);
+    } catch (error) {
+      console.error("Error saving all changes:", error);
+    }
+  };
+
+  const handleCancelEditing = () => {
+    setIsAdminMode(false);
+    // Reload the page content from Firebase
+    getDoc(doc(db, "website-content", "home")).then((doc) => {
+      if (doc.exists()) {
+        setPageContent({ ...pageContent, ...doc.data() });
+      }
+    });
+  };
+
   return (
-    <HomeContainer>
-      <HeroSection>
-        <HeroImage>
-          <Placeholder
-            type="hero"
-            height="100%"
-            alt="Taylor Johns performing"
-          />
-        </HeroImage>
-        <HeroContent>
-          <HeroTitle>Taylor Johns</HeroTitle>
-          <HeroSubtitle>
-            Country-rock artist with a touch of playful charm
-          </HeroSubtitle>
-          <HeroButton to="/music">Listen Now</HeroButton>
-        </HeroContent>
-      </HeroSection>
+    <AdminKeyDetector onActivateAdmin={handleActivateAdmin}>
+      <HomeContainer>
+        <HeroSection>
+          <HeroImage>
+            <Placeholder
+              type="hero"
+              height="100%"
+              alt="Taylor Johns performing"
+            />
+          </HeroImage>
+          <HeroContent>
+            <EditableContent
+              type="text"
+              id="heroTitle"
+              isEditing={isAdminMode}
+              onSelectForEditing={handleSelectForEditing}
+            >
+              <HeroTitle>{pageContent.heroTitle}</HeroTitle>
+            </EditableContent>
 
-      <LatestSection>
-        <SectionTitle>Latest Releases</SectionTitle>
-        <LatestGrid>
-          <LatestCard>
-            <Placeholder type="album" height="200px" alt="Latest single" />
-            <CardContent>
-              <CardTitle>New Single</CardTitle>
-              <p>Check out my latest release and let me know what you think!</p>
-              <Link to="/music">Listen &rarr;</Link>
-            </CardContent>
-          </LatestCard>
+            <EditableContent
+              type="text"
+              id="heroSubtitle"
+              isEditing={isAdminMode}
+              onSelectForEditing={handleSelectForEditing}
+            >
+              <HeroSubtitle>{pageContent.heroSubtitle}</HeroSubtitle>
+            </EditableContent>
 
-          <LatestCard>
-            <Placeholder type="concert" height="200px" alt="Live performance" />
-            <CardContent>
-              <CardTitle>Upcoming Shows</CardTitle>
-              <p>
-                Don't miss my next live performance. See all upcoming dates.
-              </p>
-              <Link to="/contact">Details &rarr;</Link>
-            </CardContent>
-          </LatestCard>
+            <HeroButton to="/music">Listen Now</HeroButton>
+          </HeroContent>
+        </HeroSection>
 
-          <LatestCard>
-            <Placeholder type="behind" height="200px" alt="Studio session" />
-            <CardContent>
-              <CardTitle>Behind The Scenes</CardTitle>
-              <p>
-                Follow my journey and get exclusive content on my social feeds.
-              </p>
-              <Link to="/feed">View Feed &rarr;</Link>
-            </CardContent>
-          </LatestCard>
-        </LatestGrid>
-      </LatestSection>
-    </HomeContainer>
+        <LatestSection>
+          <EditableContent
+            type="text"
+            id="latestTitle"
+            isEditing={isAdminMode}
+            onSelectForEditing={handleSelectForEditing}
+          >
+            <SectionTitle>{pageContent.latestTitle}</SectionTitle>
+          </EditableContent>
+
+          <LatestGrid>
+            <LatestCard>
+              <Placeholder type="album" height="200px" alt="Latest single" />
+              <CardContent>
+                <EditableContent
+                  type="text"
+                  id="card1Title"
+                  isEditing={isAdminMode}
+                  onSelectForEditing={handleSelectForEditing}
+                >
+                  <CardTitle>{pageContent.card1Title}</CardTitle>
+                </EditableContent>
+
+                <EditableContent
+                  type="text"
+                  id="card1Text"
+                  isEditing={isAdminMode}
+                  onSelectForEditing={handleSelectForEditing}
+                >
+                  <p>{pageContent.card1Text}</p>
+                </EditableContent>
+
+                <Link to="/music">Listen &rarr;</Link>
+              </CardContent>
+            </LatestCard>
+
+            <LatestCard>
+              <Placeholder
+                type="concert"
+                height="200px"
+                alt="Live performance"
+              />
+              <CardContent>
+                <EditableContent
+                  type="text"
+                  id="card2Title"
+                  isEditing={isAdminMode}
+                  onSelectForEditing={handleSelectForEditing}
+                >
+                  <CardTitle>{pageContent.card2Title}</CardTitle>
+                </EditableContent>
+
+                <EditableContent
+                  type="text"
+                  id="card2Text"
+                  isEditing={isAdminMode}
+                  onSelectForEditing={handleSelectForEditing}
+                >
+                  <p>{pageContent.card2Text}</p>
+                </EditableContent>
+
+                <Link to="/contact">Details &rarr;</Link>
+              </CardContent>
+            </LatestCard>
+
+            <LatestCard>
+              <Placeholder type="behind" height="200px" alt="Studio session" />
+              <CardContent>
+                <EditableContent
+                  type="text"
+                  id="card3Title"
+                  isEditing={isAdminMode}
+                  onSelectForEditing={handleSelectForEditing}
+                >
+                  <CardTitle>{pageContent.card3Title}</CardTitle>
+                </EditableContent>
+
+                <EditableContent
+                  type="text"
+                  id="card3Text"
+                  isEditing={isAdminMode}
+                  onSelectForEditing={handleSelectForEditing}
+                >
+                  <p>{pageContent.card3Text}</p>
+                </EditableContent>
+
+                <Link to="/feed">View Feed &rarr;</Link>
+              </CardContent>
+            </LatestCard>
+          </LatestGrid>
+        </LatestSection>
+
+        {isAdminMode && (
+          <EditToolbar>
+            <button onClick={handleSaveAllChanges}>Save All Changes</button>
+            <button className="cancel-btn" onClick={handleCancelEditing}>
+              Exit Admin Mode
+            </button>
+          </EditToolbar>
+        )}
+
+        {showEditModal && (
+          <PasswordModalOverlay>
+            <EditModal>
+              <h2>Edit Content</h2>
+              <div className="form-group">
+                <label>Content:</label>
+                {selectedElement && selectedElement.type === "text" ? (
+                  <input
+                    type="text"
+                    value={editContent}
+                    onChange={(e) => setEditContent(e.target.value)}
+                  />
+                ) : (
+                  <textarea
+                    value={editContent}
+                    onChange={(e) => setEditContent(e.target.value)}
+                  />
+                )}
+              </div>
+              <div className="button-group">
+                <button onClick={() => setShowEditModal(false)}>Cancel</button>
+                <button onClick={handleSaveEdit}>Save</button>
+              </div>
+            </EditModal>
+          </PasswordModalOverlay>
+        )}
+      </HomeContainer>
+    </AdminKeyDetector>
   );
 };
 
