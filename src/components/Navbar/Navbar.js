@@ -31,7 +31,7 @@ const NavLinks = styled.div`
   gap: 2rem;
 
   @media (max-width: ${(props) => props.theme.breakpoints.tablet}) {
-    display: ${(props) => (props.isOpen ? "flex" : "none")};
+    display: ${(props) => (props.$isOpen ? "flex" : "none")};
     flex-direction: column;
     position: absolute;
     top: 80px;
@@ -98,7 +98,7 @@ const Navbar = () => {
         <span></span>
       </Hamburger>
 
-      <NavLinks isOpen={isOpen}>
+      <NavLinks $isOpen={isOpen}>
         <NavLink to="/" active={location.pathname === "/" ? 1 : 0}>
           Home
         </NavLink>
